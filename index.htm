@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel='stylesheet' type='text/css' href='css/keylines.css'/>
+    <script type="text/javascript" src="js/keylines.js"></script>
+    <script src="/js/jquery-3.1.1.js"></script>
+
+
+    <script type="text/javascript">
+
+      window.onload = function () {
+
+        KeyLines.paths({ assets: 'assets/' });
+
+        KeyLines.create('kl', function(err, chart) {
+          chart.load({
+            type: 'LinkChart',
+            items: [{id:'id1', type: 'node', x:1150, y: 1150, t:'Hello World! From Alaa'}]
+          });
+
+          // Execute the gremlin query and get the JSON
+          fetch('/getData', {
+            method: 'GET',
+          }).then(function(resp) {
+            if (resp.status !== 200) {
+              console.log('error');
+              return;
+            }
+            resp.json().then( function(data) {
+              // Set up the properties of the chart data object
+              var chartData = {
+                type: 'LinkChart',
+                items: []
+              };
+
+              console.log(data);
+              for (var i = 0; i < data.length; i++) {
+                // Push node object in KeyLines format onto the items array
+                chartData.items.push(data[i]);
+              }
+              chart.load(chartData, chart.layout);  
+            });
+          });
+
+        });
+
+      };
+
+      function onClick() {
+        var q = document.getElementById("q").value;
+        // alert("query is "+ q);
+
+        // Execute the gremlin query and get the JSON
+        fetch('/getData?q='+q, {
+          method: 'GET',
+        }).then(function(resp) {
+          if (resp.status !== 200) {
+            console.log('error');
+            return;
+          }
+          resp.json().then( function(data) {
+            // Set up the properties of the chart data object
+            var chartData = {
+              type: 'LinkChart',
+              items: []
+            };
+
+            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+              // Push node object in KeyLines format onto the items array
+              chartData.items.push(data[i]);
+            }
+            var chart = KeyLines.components['kl'];
+            chart.load(chartData, chart.layout);  
+          });
+        });
+
+      }
+
+    </script>
+
+  </head>
+  
+  <body>
+    <div>
+      Query : <input id="q" type="text" name="query" size="200"/><button onclick="onClick()">Show</button>
+    </div>
+    <!-- This is the HTML element that will be used to render the KeyLines component -->
+    <div id="kl" style="width: 818px; height: 586px;" ></div>
+
+  </body>
+
+</html>
