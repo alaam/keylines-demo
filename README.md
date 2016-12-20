@@ -36,7 +36,7 @@ cd keylines-demo
 ```
 
 #Add your service credentials
-- Create a new file on the root of `keylines-demo` and call it credds.json
+- Create a new file on the root of `keylines-demo` and call it creds.json
 - Edit the file and add your service credentials json 
 ```
 {
